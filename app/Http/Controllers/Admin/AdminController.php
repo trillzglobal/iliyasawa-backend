@@ -50,7 +50,7 @@ class AdminController extends Controller
     /**
      * @throws \Exception
      */
-    public function getUserRoles(): bool|string
+    public function getUserRoles(): JsonResponse
     {
         $data = $this->dataService->getModelData('UserRole');
         return jsonResponse('User roles fetched', $data, Response::HTTP_OK);
@@ -59,7 +59,7 @@ class AdminController extends Controller
     /**
      * @throws \Exception
      */
-    public function getRolesByUserId($userId): bool|string
+    public function getRolesByUserId($userId): JsonResponse
     {
 //        rework on this logic
         $data = $this->dataService->getModelById('UserRole', $userId);

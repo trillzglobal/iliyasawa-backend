@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoleRequest extends FormRequest
+class TransactionDetailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,9 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role' => 'required', // Validate role format and existence in the 'roles' table
+            "*.product_id"=>"required|integer",
+            "*.quantity"=>"required|integer",
+            "*.price"=>"required|numeric"
         ];
     }
 }

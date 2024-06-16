@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,16 @@ Route::prefix('v1/')->group(function () {
         Route::post('create/role', [AdminController::class, 'createRole']);
         Route::post('create/user/role', [AdminController::class, 'createUserRole']);
         Route::get('user/roles', [AdminController::class, 'getUserRoles']);
+
+
+        Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
+        Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
+        Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
+
+        Route::post('approve/transaction/{id}', [TransactionController::class, 'approveTxDetail']);
+
+        Route::get('transactions', [TransactionController::class, 'getTransactions']);
+        Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
     });
 });
 
