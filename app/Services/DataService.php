@@ -76,6 +76,26 @@ class DataService
     /**
      * @throws Exception
      */
+    public function getModelDataWhereNotNull(string $modelName, $columnName)
+    {
+        $modelClass = $this->getModelClass($modelName);
+
+        if (!$modelClass) {
+            throw new \Exception("Model '{$modelName}' not found.");
+        }
+
+        $model = $modelClass::whereNotNull($columnName)->get();;
+
+        if (!$model) {
+            throw new \Exception("Model '{$modelName}' not found.");
+        }
+
+        return $model;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function updateModel(string $modelName, int $id, array $data)
     {
         $model = $this->getModelById($modelName, $id);

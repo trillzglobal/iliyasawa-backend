@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 
 Route::prefix('v1/')->group(function () {
@@ -28,33 +28,40 @@ Route::prefix('v1/')->group(function () {
 //        Route::post('register', [AuthController::class, 'register']);
     });
 
-    Route::middleware(['auth:api', 'admin'])->prefix('admin')->group(function () {
-        Route::post('create/user', [AdminController::class, 'createUser']);
-        Route::post('users', [AdminController::class, 'getUsers']);
-        Route::get('roles', [AdminController::class, 'getRoles']);
-        Route::post('create/role', [AdminController::class, 'createRole']);
-        Route::post('create/user/role', [AdminController::class, 'createUserRole']);
-        Route::get('user/roles', [AdminController::class, 'getUserRoles']);
+//  create profile sections, (view and update)
 
-        Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
-        Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
-        Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
-        Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
-        Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
+    Route::middleware(['auth:api'])->group(function (){
+        Route::middleware(['admin'])->prefix('admin')->group(function () {
 
-        Route::post('approve/transaction/{id}', [TransactionController::class, 'approveTxDetail']);
+            Route::get('users', [AdminController::class, 'getUsers']);
+            Route::post('create/user', [AdminController::class, 'createUser']);
+            Route::get('roles', [AdminController::class, 'getRoles']);
+            Route::post('create/role', [AdminController::class, 'createRole']);
+            Route::get('user/roles', [AdminController::class, 'getUserRoles']);
+            Route::post('create/user/role', [AdminController::class, 'createUserRole']);
 
-        Route::get('transactions', [TransactionController::class, 'getTransactions']);
-        Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
+            Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
+            Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
+            Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
+            Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
+            Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
+
+            Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
+            Route::post('approve/transaction/{id}', [TransactionController::class, 'approveTxDetail']);
+
+            Route::get('transactions', [TransactionController::class, 'getTransactions']);
+        });
+
+        Route::middleware(['managerial'])->prefix('management')->group(function (){
+            Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
+            Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
+            Route::get('transactions', [TransactionController::class, 'getTransactions']);
+            Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
+        });
     });
 
-    Route::middleware(['auth:api', 'managerial'])->prefix('management')->group(function (){
-        Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
-        Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
-        Route::get('transactions', [TransactionController::class, 'getTransactions']);
-        Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
 
-    });
+
 });
 
 
