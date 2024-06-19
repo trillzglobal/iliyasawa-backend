@@ -47,6 +47,14 @@ Route::prefix('v1/')->group(function () {
         Route::get('transactions', [TransactionController::class, 'getTransactions']);
         Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
     });
+
+    Route::middleware(['auth:api', 'managerial'])->prefix('management')->group(function (){
+        Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
+        Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
+        Route::get('transactions', [TransactionController::class, 'getTransactions']);
+        Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
+
+    });
 });
 
 
