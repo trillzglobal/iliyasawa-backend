@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RoleRequest;
 use App\Http\Requests\UserRoleRequest;
 use App\Services\DataService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
@@ -16,6 +19,21 @@ class AdminController extends Controller
     public function __construct(DataService $dataService)
     {
         $this->dataService = $dataService;
+    }
+
+    public function createUser(RegisterRequest $request): JsonResponse
+    {
+        $userData = $request->validated();
+        $userData['user_role'] = json_encode($userData['user_role']);
+        $userData['password'] = Hash::make($userData['password']);
+
+        $user = $this->dataService->createData('User', $userData);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User created successfully',
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -68,7 +86,8 @@ class AdminController extends Controller
 
     public function getUsers()
     {
-
+        $data = $this->dataService->getModelData('User');
+        return jsonResponse('Users fetched', $data, Response::HTTP_OK);
     }
 
     public function getUsersByRole()
@@ -79,6 +98,18 @@ class AdminController extends Controller
     public function getUsersById()
     {
 
+    }
+
+    public function getMainStoreProducts(): JsonResponse
+    {
+        $data = $this->dataService->getModelData('MainStore');
+        return jsonResponse('Main store products fetched', $data, Response::HTTP_OK);
+    }
+
+    public function getOutletStoreProducts(): JsonResponse
+    {
+        $data = $this->dataService->getModelData('OutletStore');
+        return jsonResponse('Outlet store products fetched', $data, Response::HTTP_OK);
     }
 
 

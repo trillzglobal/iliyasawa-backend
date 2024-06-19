@@ -25,18 +25,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1/')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
-        Route::post('register', [AuthController::class, 'register']);
+//        Route::post('register', [AuthController::class, 'register']);
     });
 
     Route::middleware(['auth:api', 'admin'])->prefix('admin')->group(function () {
+        Route::post('create/user', [AdminController::class, 'createUser']);
+        Route::post('users', [AdminController::class, 'getUsers']);
         Route::get('roles', [AdminController::class, 'getRoles']);
         Route::post('create/role', [AdminController::class, 'createRole']);
         Route::post('create/user/role', [AdminController::class, 'createUserRole']);
         Route::get('user/roles', [AdminController::class, 'getUserRoles']);
 
-
         Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
+        Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
         Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
+        Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
         Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
 
         Route::post('approve/transaction/{id}', [TransactionController::class, 'approveTxDetail']);
