@@ -56,6 +56,105 @@ class DataService
     /**
      * @throws Exception
      */
+    public function getModelDataRelationship(string $modelName, bool $includeRoles = false)
+    {
+        $modelClass = $this->getModelClass($modelName);
+
+        if (!$modelClass) {
+            throw new \Exception("Model '{$modelName}' not found.");
+        }
+
+        if ($includeRoles && $modelName === 'User') {
+            $query = $modelClass::withRoles();
+        } else {
+            $query = $modelClass::query();
+        }
+
+        $model = $query->get();
+
+        if ($model->isEmpty()) {
+            throw new \Exception("No data found for model '{$modelName}'.");
+        }
+
+        if ($includeRoles && $modelName === 'User') {
+            $model->each(function ($user) {
+                $user->role_given = $user->roles_string ? explode(',', $user->roles_string) : [];
+            });
+        }
+
+        return $model;
+    }
+
+//    public function getModelDataRelationship(string $modelName, bool $includeRoles = false)
+//    {
+//        $modelClass = $this->getModelClass($modelName);
+//
+//        if (!$modelClass) {
+//            throw new \Exception("Model '{$modelName}' not found.");
+//        }
+//
+//        $query = $modelClass::query();
+//
+//        if ($includeRoles && $modelName === 'User') {
+//            $query->withRoles();
+//        }
+//
+//        $model = $query->get();
+//
+//        if ($model->isEmpty()) {
+//            throw new \Exception("No data found for model '{$modelName}'.");
+//        }
+//
+//        return $model;
+//    }
+//    public function getModelDataRelationship(string $modelName, string $relationship = null)
+//    {
+//        $modelClass = $this->getModelClass($modelName);
+//
+//        if (!$modelClass) {
+//            throw new \Exception("Model '{$modelName}' not found.");
+//        }
+//
+//        $query = $modelClass::query();
+//
+//        if ($relationship) {
+//            $query->with($relationship);
+//        }
+//
+//        $model = $query->get();
+//
+//        if ($model->isEmpty()) {
+//            throw new \Exception("No data found for model '{$modelName}'.");
+//        }
+//
+//        return $model;
+//    }
+//    public function getModelDataRelationship(string $modelName, string $relationship = null)
+//    {
+//        $modelClass = $this->getModelClass($modelName);
+//
+//        if (!$modelClass) {
+//            throw new \Exception("Model '{$modelName}' not found.");
+//        }
+//
+//        $query = $modelClass::query();
+//
+//        if ($relationship && method_exists($modelClass, $relationship)) {
+//            $query->with($relationship);
+//        }
+//
+//        $model = $query->get();
+//
+//        if ($model->isEmpty()) {
+//            throw new \Exception("No data found for model '{$modelName}'.");
+//        }
+//
+//        return $model;
+//    }
+
+    /**
+     * @throws Exception
+     */
     public function getModelById(string $modelName, int $id)
     {
         $modelClass = $this->getModelClass($modelName);

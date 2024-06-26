@@ -10,4 +10,11 @@ class MainStore extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+
+    // Define the one-to-many relationship with TransactionDetail
+    public function transactionDetails(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TransactionDetails::class);
+    }
 }

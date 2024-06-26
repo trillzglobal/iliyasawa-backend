@@ -10,4 +10,9 @@ class UserRole extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function roles()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }

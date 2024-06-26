@@ -31,7 +31,7 @@ Route::prefix('v1/')->group(function () {
 //  create profile sections, (view and update)
 
     Route::middleware(['auth:api'])->group(function (){
-        Route::middleware(['admin'])->prefix('admin')->group(function () {
+        Route::middleware('admin')->prefix('admin')->group(function () {
 
             Route::get('users', [AdminController::class, 'getUsers']);
             Route::post('create/user', [AdminController::class, 'createUser']);
@@ -52,16 +52,19 @@ Route::prefix('v1/')->group(function () {
             Route::get('transactions', [TransactionController::class, 'getTransactions']);
         });
 
-        Route::middleware(['managerial'])->prefix('management')->group(function (){
+        Route::middleware('managerial')->prefix('management')->group(function (){
             Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
             Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
             Route::get('transactions', [TransactionController::class, 'getTransactions']);
             Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
         });
+
+        Route::middleware('')->prefix('')->group(function (){
+            Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
+            Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
+            Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
+        });
     });
-
-
-
 });
 
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RoleRequest;
 use App\Http\Requests\UserRoleRequest;
+use App\Models\User;
+use App\Models\UserRole;
 use App\Services\DataService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -70,7 +72,8 @@ class AdminController extends Controller
      */
     public function getUserRoles(): JsonResponse
     {
-        $data = $this->dataService->getModelData('UserRole');
+//        $data = $this->dataService->getModelData('UserRole');
+        $data = UserRole::with('roles')->get();
         return jsonResponse('User roles fetched', $data, Response::HTTP_OK);
     }
 
@@ -80,13 +83,14 @@ class AdminController extends Controller
     public function getRolesByUserId($userId): JsonResponse
     {
 //        rework on this logic
+//        Summary endpoint
         $data = $this->dataService->getModelById('UserRole', $userId);
         return jsonResponse('User role fetched', $data, Response::HTTP_OK);
     }
 
     public function getUsers()
     {
-        $data = $this->dataService->getModelData('User');
+        $data = User::with('roles')->get();
         return jsonResponse('Users fetched', $data, Response::HTTP_OK);
     }
 
