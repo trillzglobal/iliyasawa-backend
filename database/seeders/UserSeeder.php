@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
                 'company_address' => '123 Main Street, Anytown USA',
                 'phone_number' => '+1 (555) 555-5555',
                 'password' => bcrypt('password'),
-                'user_role' => 'admin',
+                'user_role' => [1],
                 'password_attempt' => 0,
             ]];
 

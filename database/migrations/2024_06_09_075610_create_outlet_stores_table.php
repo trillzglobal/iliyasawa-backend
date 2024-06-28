@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('main_stores')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('total_price');
+            $table->unsignedBigInteger('last_active_role')->nullable();
             $table->timestamps();
         });
     }

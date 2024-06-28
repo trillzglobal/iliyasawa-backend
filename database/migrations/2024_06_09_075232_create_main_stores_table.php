@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('measurement_unit');
             $table->integer('quantity');
             $table->enum('store_type', ['procurement', 'finished']);
+            $table->unsignedBigInteger('last_active_role')->nullable();
             $table->timestamps();
         });
     }

@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Auth\AuthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,7 +29,7 @@ Route::prefix('v1/')->group(function () {
 
 //  create profile sections, (view and update)
 
-    Route::middleware(['auth:api'])->group(function (){
+    Route::middleware(['auth:api'])->group(function () {
         Route::middleware('admin')->prefix('admin')->group(function () {
 
             Route::get('users', [AdminController::class, 'getUsers']);
@@ -52,18 +51,17 @@ Route::prefix('v1/')->group(function () {
             Route::get('transactions', [TransactionController::class, 'getTransactions']);
         });
 
-        Route::middleware('managerial')->prefix('management')->group(function (){
-            Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
-            Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
+        Route::group([], function () {
+            Route::get('main-store-products', [TransactionController::class, 'getMainStoreProducts']);
+            Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
+            Route::get('outlet-store-products', [TransactionController::class, 'getOutletStoreProducts']);
+            Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
             Route::get('transactions', [TransactionController::class, 'getTransactions']);
+            Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
             Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
         });
 
-        Route::middleware('')->prefix('')->group(function (){
-            Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
-            Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
-            Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
-        });
+        Route::post('switch-account', [AuthController::class, 'switchRole']);
     });
 });
 

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('password')->default(\Illuminate\Support\Facades\Hash::make('Welcome123'));
             $table->string('password_attempt');
             $table->json('user_role');
+            $table->unsignedBigInteger('active_role')->nullable();
             $table->enum('account_type', ['internal', 'outlet', 'loyal_customers', 'others'])->default('others');
             $table->enum('status', ['active', 'inactive', 'blocked'])->default('active');
             $table->rememberToken();

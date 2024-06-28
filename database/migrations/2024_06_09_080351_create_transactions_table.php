@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->decimal('paid_amount')->nullable();
             $table->integer('remaining_amount')->nullable();
+            $table->unsignedBigInteger('last_active_role')->nullable();
             $table->timestamps();
         });
     }

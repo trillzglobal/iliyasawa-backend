@@ -10,6 +10,7 @@ use App\Models\Transaction;
 use App\Services\DataService;
 use App\Services\TransactionService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class TransactionController extends Controller
@@ -19,6 +20,9 @@ class TransactionController extends Controller
 
     public function __construct(TransactionService $transactionService, DataService $dataService)
     {
+        $this->middleware('check.role:3')->only(['createMainStoreData', 'createOutletStoreData', 'createTransactionDetail', 'approveTxDetail']);
+        $this->middleware('check.role:4')->only(['approveTxDetail']);
+
         $this->transactionService = $transactionService;
         $this->dataService = $dataService;
     }
@@ -26,6 +30,7 @@ class TransactionController extends Controller
     public function createMainStoreData(MainStoreRequest $request): JsonResponse
     {
         $storeData = $request->validated();
+        $storeData['last_active_role'] = Auth::user()->active_role;
         $data = $this->dataService->createData('MainStore', $storeData);
         return jsonResponse('Store data created', $data, Response::HTTP_CREATED);
     }
@@ -33,6 +38,7 @@ class TransactionController extends Controller
     public function createOutletStoreData(OutlestStoreRequest $request): JsonResponse
     {
         $outletStoreData = $request->validated();
+        $outletStoreData['last_active_role'] = Auth::user()->active_role;
         $data = $this->dataService->createData('OutletStore', $outletStoreData);
         return jsonResponse('Outlet store data created', $data, Response::HTTP_CREATED);
     }
@@ -40,13 +46,13 @@ class TransactionController extends Controller
     public function createTransactionDetail(TransactionDetailRequest $request): JsonResponse
     {
         $transactionDetailsData = $request->validated();
+        $transactionDetailsData['last_active_role'] = Auth::user()->active_role;
         $data = $this->transactionService->storeTransactionDetails($transactionDetailsData);
         return jsonResponse('Transaction details stored successfully', $data, Response::HTTP_CREATED);
     }
 
     public function approveTxDetail($id): JsonResponse
     {
-        $this->middleware('check.role:3,4');
         $data = $this->transactionService->acceptTransactionDetail($id);
         if ($data === true) {
             return jsonResponse('Transaction details approved', $data, Response::HTTP_OK);
@@ -90,4 +96,15 @@ class TransactionController extends Controller
         return jsonResponse('Transactions data fetched', $data, Response::HTTP_CREATED);
     }
 
+    public function getMainStoreProducts(): JsonResponse
+    {
+        $data = $this->dataService->getModelData('MainStore');
+        return jsonResponse('Main store products fetched', $data, Response::HTTP_OK);
+    }
+
+    public function getOutletStoreProducts(): JsonResponse
+    {
+        $data = $this->dataService->getModelData('OutletStore');
+        return jsonResponse('Outlet store products fetched', $data, Response::HTTP_OK);
+    }
 }

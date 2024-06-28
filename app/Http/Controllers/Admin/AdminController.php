@@ -62,9 +62,24 @@ class AdminController extends Controller
      */
     public function createUserRole(UserRoleRequest $request): JsonResponse
     {
-        $roleData = $request->validated();
-        $data = $this->dataService->createData('UserRole', $roleData);
-        return jsonResponse('User role created', $data, Response::HTTP_CREATED);
+        $validatedData = $request->validated();
+        $userRole = UserRole::create($validatedData);
+
+        // Find the user by ID
+        $user = User::findOrFail($userRole->user_id);
+
+        // Decode the existing user_role JSON column
+        $userRoles = $user->user_role ?? [];
+
+        // Add the new role_id to the user_role array
+        if (!in_array($userRole->role_id, $userRoles)) {
+            $userRoles[] = $userRole->role_id;
+        }
+
+        // Update the user_role JSON column
+        $user->user_role = $userRoles;
+        $user->save();
+        return jsonResponse('User role created', $userRole, Response::HTTP_CREATED);
     }
 
     /**
@@ -103,18 +118,5 @@ class AdminController extends Controller
     {
 
     }
-
-    public function getMainStoreProducts(): JsonResponse
-    {
-        $data = $this->dataService->getModelData('MainStore');
-        return jsonResponse('Main store products fetched', $data, Response::HTTP_OK);
-    }
-
-    public function getOutletStoreProducts(): JsonResponse
-    {
-        $data = $this->dataService->getModelData('OutletStore');
-        return jsonResponse('Outlet store products fetched', $data, Response::HTTP_OK);
-    }
-
 
 }

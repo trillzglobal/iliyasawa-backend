@@ -30,7 +30,7 @@ class RegisterRequest extends FormRequest
             'company_address' => 'required|string|max:255',
             'phone_number' => 'required|string|max:255',
             'password' => 'required|string|min:6',
-            'user_role' => 'sometimes',
+            'user_role' => 'sometimes|array',
             'password_attempt' => 'sometimes',
         ];
     }
