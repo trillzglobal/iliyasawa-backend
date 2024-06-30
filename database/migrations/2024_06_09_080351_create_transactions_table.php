@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('sold_to')->nullable();
             $table->unsignedBigInteger('accepted_by')->nullable();
             $table->foreign('accepted_by')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->decimal('paid_amount')->nullable();

@@ -46,7 +46,6 @@ Route::prefix('v1/')->group(function () {
             Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
 
             Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
-            Route::post('approve/transaction/{id}', [TransactionController::class, 'approveTxDetail']);
 
             Route::get('transactions', [TransactionController::class, 'getTransactions']);
         });
@@ -58,7 +57,10 @@ Route::prefix('v1/')->group(function () {
             Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
             Route::get('transactions', [TransactionController::class, 'getTransactions']);
             Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
+            Route::get('accepted/transactions', [TransactionController::class, 'getAcceptedTransactions']);
+            Route::post('accept/transaction/{id}', [TransactionController::class, 'acceptTxDetail']);
             Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
+            Route::post('approve/transaction/{id}', [TransactionController::class, 'approveTxDetail']);
         });
 
         Route::post('switch-account', [AuthController::class, 'switchRole']);
