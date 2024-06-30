@@ -78,7 +78,7 @@ class TransactionController extends Controller
         try {
             $data = $this->transactionService->acceptTransactionDetail($id);
             if ($data === true) {
-                return jsonResponse('Transaction details approved', $data, Response::HTTP_OK);
+                return jsonResponse('Transaction details approved', $data, Response::HTTP_ACCEPTED);
             }
             return jsonResponse('Failed to approve transaction', $data, Response::HTTP_CONFLICT);
         } catch (Exception $exception) {
@@ -91,7 +91,7 @@ class TransactionController extends Controller
         try {
             $data = $this->transactionService->approveTransactionDetail($id);
             if ($data === true) {
-                return jsonResponse('Transaction details approved', true, Response::HTTP_OK);
+                return jsonResponse('Transaction details approved', true, Response::HTTP_ACCEPTED);
             }
             return jsonResponse('Failed to approve transaction', $data, Response::HTTP_CONFLICT);
         } catch (Exception $exception) {
@@ -117,7 +117,7 @@ class TransactionController extends Controller
     {
         try {
             $data = $this->transactionService->getAcceptedTransactions();
-            return jsonResponse('Accepted transactions data fetched', $data, Response::HTTP_CREATED);
+            return jsonResponse('Accepted transactions data fetched', $data, Response::HTTP_OK);
         } catch (Exception $exception) {
             return jsonResponse($exception->getMessage() . '::On Line::' . $exception->getLine(), [], Response::HTTP_BAD_REQUEST);
         }
@@ -127,7 +127,7 @@ class TransactionController extends Controller
     {
         try {
             $data = $this->transactionService->getApprovedTransactions();
-            return jsonResponse('Approved transactions data fetched', $data, Response::HTTP_CREATED);
+            return jsonResponse('Approved transactions data fetched', $data, Response::HTTP_OK);
         } catch (Exception $exception) {
             return jsonResponse($exception->getMessage() . '::On Line::' . $exception->getLine(), [], Response::HTTP_BAD_REQUEST);
         }

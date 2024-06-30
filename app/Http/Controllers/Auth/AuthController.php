@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -9,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -18,7 +18,7 @@ class AuthController extends Controller
 
     public function __construct(DataService $dataService)
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
         $this->dataService = $dataService;
     }
 
@@ -28,22 +28,14 @@ class AuthController extends Controller
 
         $token = Auth::attempt($credentials);
         if (!$token = Auth::attempt($credentials)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);
+            return jsonResponse('Unauthorized', null, Response::HTTP_UNAUTHORIZED);
         }
 
         $user = Auth::user();
         $user->active_role = $user->user_role[0];
         $user->save();
 
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
-            'token' => $token,
-        ]);
-
+        return jsonResponse('Login success', ['user' => $user, 'token' => $token], Response::HTTP_OK);
     }
 
     /**
@@ -59,36 +51,18 @@ class AuthController extends Controller
         $user = $this->dataService->createData('User', $userData);
 
         $token = Auth::login($user);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ]);
+        return jsonResponse('User created successfully', ['user' => $user, 'authorisation' => ['token' => $token, 'type' => 'bearer',]], Response::HTTP_OK);
     }
 
     public function logout(): JsonResponse
     {
         Auth::logout();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
+        return jsonResponse('Successfully logged out', null, Response::HTTP_OK);
     }
 
     public function refresh(): JsonResponse
     {
-        return response()->json([
-            'status' => 'success',
-            'user' => Auth::user(),
-            'authorisation' => [
-                'token' => Auth::refresh(),
-                'type' => 'bearer',
-            ]
-        ]);
+        return jsonResponse('Token refreshed', ['user' => Auth::user(), 'authorisation' => ['token' => Auth::refresh(), 'type' => 'bearer',]], Response::HTTP_OK);
     }
 
     public function switchRole(Request $request): JsonResponse
@@ -100,10 +74,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         if (!in_array($request->role_id, $user->user_role)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid role',
-            ], 400);
+            return jsonResponse('Invalid role| Role not found', [], Response::HTTP_BAD_REQUEST);
         }
 
         $user->active_role = $request->role_id;
@@ -112,12 +83,7 @@ class AuthController extends Controller
         // Generate a new token with updated claims
         $token = Auth::refresh();
 
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
-            'token' => $token,
-            'type' => 'bearer',
-        ]);
+        return jsonResponse('Role switching success', ['user' => $user, 'token' => $token, 'type' => 'bearer'], Response::HTTP_ACCEPTED);
     }
 
 }

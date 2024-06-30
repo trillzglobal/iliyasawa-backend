@@ -31,7 +31,7 @@ Route::prefix('v1/')->group(function () {
 
     Route::middleware(['auth:api'])->group(function () {
         Route::middleware('admin')->prefix('admin')->group(function () {
-
+//  User management
             Route::get('users', [AdminController::class, 'getUsers']);
             Route::post('create/user', [AdminController::class, 'createUser']);
             Route::get('roles', [AdminController::class, 'getRoles']);
@@ -39,14 +39,15 @@ Route::prefix('v1/')->group(function () {
             Route::get('user/roles', [AdminController::class, 'getUserRoles']);
             Route::post('create/user/role', [AdminController::class, 'createUserRole']);
 
+//  Store Routes
             Route::post('create/main-store-product', [TransactionController::class, 'createMainStoreData']);
             Route::get('main-store-products', [AdminController::class, 'getMainStoreProducts']);
             Route::post('create/outlet-store-product', [TransactionController::class, 'createOutletStoreData']);
             Route::get('outlet-store-products', [AdminController::class, 'getOutletStoreProducts']);
             Route::post('create/transaction-detail', [TransactionController::class, 'createTransactionDetail']);
 
+//  Transaction Routes
             Route::get('approved/transactions', [TransactionController::class, 'getApprovedTransactions']);
-
             Route::get('transactions', [TransactionController::class, 'getTransactions']);
         });
 

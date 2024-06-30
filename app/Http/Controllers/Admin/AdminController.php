@@ -51,7 +51,7 @@ class AdminController extends Controller
     /**
      * @throws \Exception
      */
-    public function getRoles(): bool|string
+    public function getRoles(): JsonResponse
     {
         $data = $this->dataService->getModelData('Role');
         return jsonResponse('Role fetched', $data, Response::HTTP_OK);

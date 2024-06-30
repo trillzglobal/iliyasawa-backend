@@ -12,14 +12,14 @@ if (!function_exists('jsonResponse')) {
      * @param int $statusCode
      * @return JsonResponse
      */
-    function jsonResponse(string $message, mixed $data = null, int $code = 200, int $statusCode = 200): JsonResponse
+    function jsonResponse(string $message, mixed $data = null, int $code = null): JsonResponse
     {
         $response = [
             'message' => $message,
             'data' => $data,
-            'code' => $code,
+            'code' => $code ?? 200, // Default to 200 if $code is null
         ];
 
-        return response()->json($response, $statusCode);
+        return response()->json($response, $code ?? 200); // Use 200 if $code is null
     }
 }

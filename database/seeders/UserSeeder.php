@@ -24,6 +24,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'user_role' => [1],
                 'password_attempt' => 0,
+                'account_type'=>'internal',
             ]];
 
         foreach ($users as $user) {
